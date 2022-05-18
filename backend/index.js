@@ -6,6 +6,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const Album = require("./models/album");
+const axios = require("axios");
 const cron = require("node-cron");
 const { seedDb, generatePalettes } = require("./scripts");
 
@@ -40,7 +41,7 @@ cron.schedule("0 4 * * Sunday", async () => {
 });
 
 // Keep server alive
-cron.schedule("*/20 * * * *", () => {
+cron.schedule("*/5 * * * *", async () => {
   console.log("Pinging server");
-  axios.get("https://color-fy-api.herokuapp.com/");
+  await axios.get("https://color-fy-api.herokuapp.com/");
 });
