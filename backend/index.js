@@ -34,9 +34,12 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// Run script every Sunday at 0930 IST
+// Run scripts every Sunday
 cron.schedule("0 4 * * Sunday", async () => {
   await Promise.resolve(seedDb());
+});
+
+cron.schedule("15 4 * * Sunday", async () => {
   await Promise.resolve(generatePalettes());
 });
 
