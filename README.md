@@ -2,7 +2,7 @@
 
 ![color-fy](https://i.imgur.com/tvqSlEx.jpg)
 
-[color-fy](https://color-fy.vercel.app/) is a website that curates colour palettes extracted from new album covers from Spotify every week. The dominant colours on the covers are extracted using [coolors.](https://coolors.co/image-picker)
+[color-fy](https://color-fy.vercel.app/) is a website that curates colour palettes extracted from new album covers from Spotify every week. The dominant colours on the covers are extracted using [color-thief-node](https://github.com/zicodeng/color-thief-node)
 
 The project has two goals, firstly to provide color inspiration for developers and designers & secondly for visitors of the site to discover new music.
 
