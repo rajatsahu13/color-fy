@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 const Album = require("./models/album");
 const puppeteer = require("puppeteer");
 const axios = require("axios");
+const { getPaletteFromURL } = require("color-thief-node");
 
 const album_count = 15; // Number of albums to display
 const client_id = "c5be357d4ca84b5b8bd086363ac4730a";
@@ -70,50 +71,27 @@ module.exports.seedDb = async () => {
   await browser.close();
 };
 
+const rgbToHex = (r, g, b) =>
+  "#" +
+  [r, g, b]
+    .map((x) => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    })
+    .join("");
+
 // Scipt for generating color palettes
 module.exports.generatePalettes = async () => {
   console.log("Generating color palettes");
   const albums = await Album.find({});
   for (let i = 0; i < albums.length; i++) {
-    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
-    const context = browser.defaultBrowserContext();
-    await context.overridePermissions("https://coolors.co/image-picker", [
-      "clipboard-read",
-    ]);
-    const page = await browser.newPage();
-    await page.goto("https://coolors.co/image-picker");
-    await page.waitForSelector(".iubenda-cs-container");
-    await page.waitForSelector(".iubenda-cs-accept-btn");
-    await page.click(".iubenda-cs-accept-btn");
-    await page.waitForSelector("#image-picker_browse-btn");
-    await page.click("#image-picker_browse-btn");
-    await page.waitForSelector("#image-browser");
-    await page.click("a[href='url']");
-    await page.waitForSelector("#image-browser_url_input");
-    await page.type("#image-browser_url_input", albums[i].cover);
-    await page.click("#image-browser_url_ok-btn");
-    await page.waitForSelector("#image-picker_palette");
-    await page.waitForSelector(".palette-selector_buttons a:first-child");
-    await page.waitForTimeout(4000);
-    await page.click(".palette-selector_buttons a:first-child");
-    await page.waitForTimeout(4000);
-    await page.click(".palette-selector_buttons a:first-child");
-    await page.waitForTimeout(4000);
-    await page.click(".palette-selector_buttons a:first-child");
-    await page.click("#image-picker_export-btn");
-    await page.waitForSelector("#palette-exporter_links");
-    await page.click("a[data-type='url']");
-    let url;
-    url = await page.evaluate(() => navigator.clipboard.readText());
-    url = url.slice(19);
-    let colors = [];
-    for (let j = 0; j < url.length; j = j + 7) {
-      colors.push(`#${url.slice(j, j + 6)}`);
+    const colorPallete = await getPaletteFromURL(albums[i].cover, 9);
+    for (let i = 0; i < colorPallete.length; i++) {
+      colorPallete[i] = rgbToHex(...colorPallete[i]);
     }
     const doc = await Album.findOne({ name: albums[i].name });
-    doc.palette = colors;
+    doc.palette = colorPallete;
     await doc.save();
-    await browser.close();
   }
   console.log("Palettes generated successfully");
 };
