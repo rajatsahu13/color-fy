@@ -36,11 +36,11 @@ app.listen(port, () => {
 
 // Run scripts every Sunday
 cron.schedule("0 4 * * Sunday", async () => {
-  await seedDb();
+  await Promise.resolve(seedDb());
 });
 
-cron.schedule("5 4 * * Sunday", async () => {
-  await generatePalettes();
+cron.schedule("10 4 * * Sunday", async () => {
+  await Promise.resolve(generatePalettes());
 });
 
 // Keep server alive
