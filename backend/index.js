@@ -34,17 +34,13 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// Run scripts every Sunday
+// Run script every Sunday
 cron.schedule("0 4 * * Sunday", async () => {
   await Promise.resolve(seedDb());
-});
-
-cron.schedule("10 4 * * Sunday", async () => {
   await Promise.resolve(generatePalettes());
 });
 
 // Keep server alive
 cron.schedule("*/5 * * * *", async () => {
-  console.log("Pinging server");
   await axios.get("https://color-fy-api.herokuapp.com/");
 });
