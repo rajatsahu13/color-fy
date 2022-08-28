@@ -8,7 +8,7 @@ import axios from "axios";
 import { getPlaiceholder } from "plaiceholder";
 
 export async function getServerSideProps() {
-  const response = await axios.get("https://color-fy-api.herokuapp.com/");
+  const response = await axios.get(process.env.REACT_APP_API_URL);
   const albums = response.data.albums;
   const imagePaths = [];
   albums.map((album) => imagePaths.push(album.cover));
