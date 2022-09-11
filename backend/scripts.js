@@ -56,7 +56,7 @@ const fetchToken = async (payload) => {
 
 const fetchAlbums = async (token) => {
   const response = await axios.get(
-    `https://api.spotify.com/v1/browse/new-releases?limit=50`,
+    `https://api.spotify.com/v1/browse/new-releases?country=US&limit=50`,
     {
       headers: {
         "Content-type": "application/json",
