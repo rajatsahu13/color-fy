@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const Album = require("./models/album");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const axios = require("axios");
 const { getPaletteFromURL } = require("color-thief-node");
 
@@ -21,23 +21,31 @@ const rgbToHex = (r, g, b) =>
     .join("");
 
 const getSpotifyCode = async () => {
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
-  const page = await browser.newPage();
-  await page.goto(
-    `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`
-  );
-  await page.waitForSelector("input#login-username");
-  await page.waitForSelector("input#login-password");
-  await page.type("input#login-username", process.env.sp_username);
-  await page.type("input#login-password", process.env.sp_password);
-  await page.click("button#login-button");
-  await page.waitForNavigation();
-  await page.waitForSelector("button[data-testid='auth-accept']");
-  await page.click("button[data-testid='auth-accept']");
-  await page.waitForNavigation();
-  const url = await page.url();
-  await browser.close();
-  return url.slice(34);
+  try {
+    const browser = await puppeteer.launch({
+      executablePath: "/usr/bin/google-chrome-stable",
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+    await page.goto(
+      `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`
+    );
+    await page.waitForSelector("input#login-username");
+    await page.waitForSelector("input#login-password");
+    await page.type("input#login-username", process.env.sp_username);
+    await page.type("input#login-password", process.env.sp_password);
+    await page.click("button#login-button");
+    await page.waitForNavigation();
+    await page.waitForSelector("button[data-testid='auth-accept']");
+    await page.click("button[data-testid='auth-accept']");
+    await page.waitForNavigation();
+    const url = await page.url();
+    await browser.close();
+    return url.slice(34);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const fetchToken = async (payload) => {
