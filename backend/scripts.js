@@ -72,9 +72,10 @@ const fetchAlbums = async (token) => {
       },
     }
   );
-  const albums = response.data.albums.items
-    .filter((album) => album.album_type === "album")
-    .slice(0, album_count);
+  const albums = response.data.albums.items.filter(
+    (album) => album.album_type === "album"
+  );
+  // .slice(0, album_count);
   return albums;
 };
 

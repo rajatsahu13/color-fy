@@ -7,9 +7,11 @@ import Image from "next/image";
 import axios from "axios";
 import { getPlaiceholder } from "plaiceholder";
 
+const album_count = 15; // Number of albums to display
+
 export async function getServerSideProps() {
   const response = await axios.get(process.env.REACT_APP_API_URL);
-  const albums = response.data.albums;
+  const albums = response.data.albums.slice(0, album_count);
   const imagePaths = [];
   albums.map((album) => imagePaths.push(album.cover));
 
