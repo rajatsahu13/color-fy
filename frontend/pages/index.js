@@ -6,6 +6,7 @@ import Head from "next/head";
 import Image from "next/image";
 import axios from "axios";
 import { getPlaiceholder } from "plaiceholder";
+import svg from 'svg-builder'
 
 const album_count = 15; // Number of albums to display
 
@@ -42,6 +43,84 @@ export default function Home({ albums, images }) {
     }, 2000);
   };
 
+  const downloadSVG = (album) => {
+    let svgBuilder = svg.newInstance();
+    svgBuilder.width('').height('')
+    svgBuilder.viewBox('0 0 400 250')
+    svgBuilder.g({}, svgBuilder.rect({
+      x: 0,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[0]
+    }), svgBuilder.rect({
+      x: 50,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[1]
+    }), svgBuilder.rect({
+      x: 100,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[2]
+    }), svgBuilder.rect({
+      x: 150,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[3]
+    }), svgBuilder.rect({
+      x: 200,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[4]
+    }), svgBuilder.rect({
+      x: 250,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[5]
+    }), svgBuilder.rect({
+      x: 300,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[6]
+    }), svgBuilder.rect({
+      x: 350,
+      y: 0,
+      width: "50",
+      height: "220",
+      fill: album.palette[7]
+    }), svgBuilder.text({
+      x: "10",
+      y: "235",
+      'font-family': 'Arial',
+      'font-size': '6',
+      'alignment-baseline': 'middle'
+    }, 'Exported from color-fy'), svgBuilder.text({
+      x: "390",
+      y: "235",
+      'font-family': 'Arial',
+      'font-size': '6',
+      'alignment-baseline': 'middle',
+      'text-anchor': 'end'
+    }, `${album.name} by ${album.artist}`)).render();
+
+    let svgData = `${svgBuilder.root}${svgBuilder.elements[0]}${svgBuilder.elements[1]}${svgBuilder.elements[2]}</svg>`
+    let svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    let svgUrl = URL.createObjectURL(svgBlob);
+    let downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = `${album.name} - ${album.artist}`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
   return (
     <React.Fragment>
       <Head>
@@ -66,11 +145,10 @@ export default function Home({ albums, images }) {
         >
           {albums.map((album, i) => (
             <div
-              className={`p-4  ${
-                [1, 4, 7, 10, 13].includes(i)
-                  ? "border-x-8 md:border-x-0"
-                  : "border-x-8"
-              } border-y-4 border-black`}
+              className={`p-4  ${[1, 4, 7, 10, 13].includes(i)
+                ? "border-x-8 md:border-x-0"
+                : "border-x-8"
+                } border-y-4 border-black`}
               key={album._id}
             >
               <a href={album.url} target="_blank" rel="noreferrer">
@@ -85,10 +163,19 @@ export default function Home({ albums, images }) {
                   placeholder="blur"
                 />
               </a>
-              <p className=" font-black text-2xl uppercase pt-4">
-                {album.name}
-              </p>
-              <p className=" font-black text-xl uppercase">{album.artist}</p>
+              <div className="flex pt-4 justify-between items-center">
+                <div>
+                  <p className=" font-black text-2xl uppercase ">
+                    {album.name}
+                  </p>
+                  <p className=" font-black text-xl uppercase">{album.artist}</p>
+                </div>
+                <div className="cursor-pointer" onClick={e => downloadSVG(album)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                </div>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 py-4 gap-y-3 gap-x-3">
                 {album.palette.map((color, i) => (
                   <div
