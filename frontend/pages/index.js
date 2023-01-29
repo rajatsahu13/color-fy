@@ -48,66 +48,25 @@ export default function Home({ albums, images }) {
     svgBuilder.width('').height('')
     svgBuilder.viewBox('0 0 400 250')
     svgBuilder.g({}, svgBuilder.rect({
-      x: 0,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[0]
+      x: 0, y: 0, width: "50", height: "220", fill: album.palette[0]
     }), svgBuilder.rect({
-      x: 50,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[1]
+      x: 50, y: 0, width: "50", height: "220", fill: album.palette[1]
     }), svgBuilder.rect({
-      x: 100,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[2]
+      x: 100, y: 0, width: "50", height: "220", fill: album.palette[2]
     }), svgBuilder.rect({
-      x: 150,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[3]
+      x: 150, y: 0, width: "50", height: "220", fill: album.palette[3]
     }), svgBuilder.rect({
-      x: 200,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[4]
+      x: 200, y: 0, width: "50", height: "220", fill: album.palette[4]
     }), svgBuilder.rect({
-      x: 250,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[5]
+      x: 250, y: 0, width: "50", height: "220", fill: album.palette[5]
     }), svgBuilder.rect({
-      x: 300,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[6]
+      x: 300, y: 0, width: "50", height: "220", fill: album.palette[6]
     }), svgBuilder.rect({
-      x: 350,
-      y: 0,
-      width: "50",
-      height: "220",
-      fill: album.palette[7]
+      x: 350, y: 0, width: "50", height: "220", fill: album.palette[7]
     }), svgBuilder.text({
-      x: "10",
-      y: "235",
-      'font-family': 'Arial',
-      'font-size': '6',
-      'alignment-baseline': 'middle'
+      x: "10", y: "235", 'font-family': 'Arial', 'font-size': '6', 'alignment-baseline': 'middle'
     }, 'Exported from color-fy'), svgBuilder.text({
-      x: "390",
-      y: "235",
-      'font-family': 'Arial',
-      'font-size': '6',
-      'alignment-baseline': 'middle',
-      'text-anchor': 'end'
+      x: "390", y: "235", 'font-family': 'Arial', 'font-size': '6', 'alignment-baseline': 'middle', 'text-anchor': 'end'
     }, `${album.name} by ${album.artist}`)).render();
 
     let svgData = `${svgBuilder.root}${svgBuilder.elements[0]}${svgBuilder.elements[1]}${svgBuilder.elements[2]}</svg>`
@@ -115,6 +74,7 @@ export default function Home({ albums, images }) {
     let svgUrl = URL.createObjectURL(svgBlob);
     let downloadLink = document.createElement("a");
     downloadLink.href = svgUrl;
+    album.name = album.name.replace(/[<>:\"\.\/\\|?*]/, "");
     downloadLink.download = `${album.name} - ${album.artist}`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
