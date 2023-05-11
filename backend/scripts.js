@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const Album = require("./models/album");
-const puppeteer = require("puppeteer-core");
+const puppeteer = require("puppeteer");
 const axios = require("axios");
 const { getPaletteFromURL } = require("color-thief-node");
 
@@ -23,11 +23,12 @@ const rgbToHex = (r, g, b) =>
 const getSpotifyCode = async () => {
   try {
     const browser = await puppeteer.launch({
-      executablePath: "/usr/bin/google-chrome-stable",
+      // executablePath: "/usr/bin/google-chrome-stable",
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0);
     await page.goto(
       `https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`
     );
