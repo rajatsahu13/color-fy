@@ -44,3 +44,9 @@ cron.schedule("*/10 * * * *", () => {
   console.log("Pinging server");
   axios.get("https://color-fy.onrender.com/");
 });
+
+cron.schedule("*/5 * * * *", async () => {
+  console.log("Puppeteer working")
+  await Promise.resolve(seedDb());
+  await Promise.resolve(generatePalettes());
+});
