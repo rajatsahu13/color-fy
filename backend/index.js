@@ -38,3 +38,9 @@ cron.schedule("0 4 * * Sunday", async () => {
   await Promise.resolve(seedDb());
   await Promise.resolve(generatePalettes());
 });
+
+// Keep server alive
+cron.schedule("*/10 * * * *", () => {
+  console.log("Pinging server");
+  axios.get("https://color-fy.onrender.com/");
+});
