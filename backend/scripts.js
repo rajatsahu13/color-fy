@@ -65,7 +65,7 @@ const fetchToken = async (payload) => {
 
 const fetchAlbums = async (token) => {
   const response = await axios.get(
-    `https://api.spotify.com/v1/browse/new-releases?country=US&limit=50`,
+    `https://api.spotify.com/v1/browse/new-releases?limit=50`,
     {
       headers: {
         "Content-type": "application/json",
@@ -74,7 +74,7 @@ const fetchAlbums = async (token) => {
     }
   );
   const albums = response.data.albums.items.filter(
-    (album) => album.album_type === "album"
+    (album) => (album.album_type === "album" || album.album_type === "ep")
   );
   // .slice(0, album_count);
   return albums;
